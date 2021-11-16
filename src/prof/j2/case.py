@@ -18,6 +18,12 @@ class Case:
             >>> Case(0).region, Case(80).region, Case(25).region
             (1, 9, 3)
         """
+        
+        self.position = pos
+        self.value = value
+        self.row = pos%9
+        self.line = pos//9
+        self.region = pos//9+1
         pass
     
     def setValue(self, value):
@@ -32,6 +38,8 @@ class Case:
             >>> c.value == 8
             True
         """
+        self.value = value
+        
         pass
         
 if __name__ == '__main__':
