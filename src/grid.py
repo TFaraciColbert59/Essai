@@ -1,3 +1,4 @@
+
 from case import Case
 from stack import Stack
 
@@ -119,3 +120,123 @@ class Grid:
         if not self.stack.empty():
             old = self.stack.pop() # position, oldValue, newValue
             self.setValue(old[0], old[1])
+            self.stack.pop()
+            
+    def verifLine(self, position):
+        """
+            position est la position de la case qui vient d'être modifiée
+            On teste toutes les cases de la ligne.
+            
+            Tests :
+            >>> S = Grid.loadFromFile(0)
+            >>> S.setValue(1, 4)
+            >>> S.cases[1].valid
+            False
+            >>> S.setValue(1, 7)
+            >>> S.cases[1].valid
+            True
+        """
+        c = [el.value for el in self.cases if el.line == self.cases[position].line and el.position != position]
+
+        if self.cases[position].value in c:
+            self.cases[position].valid = False
+            return False
+        else:
+            self.cases[position].valid = True
+            return True
+            
+    def verifRow(self, position):
+        """
+            position est la position de la case qui vient d'être modifiée
+            On teste toutes les cases de la ligne.
+            
+            Tests :
+            >>> S = Grid.loadFromFile(0)
+            >>> S.setValue(9, 4)
+            >>> S.cases[9].valid
+            False
+            >>> S.setValue(9, 7)
+            >>> S.cases[9].valid
+            True
+        """
+        c = [el.value for el in self.cases if el.row == self.cases[position].row and el.position != position]
+        
+        if self.cases[position].value in c:
+            self.cases[position].valid = False
+            return False
+        else:
+            self.cases[position].valid = True
+            return True
+            
+    def verifRegion(self, position):
+        """
+            position est la position de la case qui vient d'être modifiée
+            On teste toutes les cases de la ligne.
+            
+            Tests :
+            >>> S = Grid.loadFromFile(0)
+            >>> S.setValue(20, 3)
+            >>> S.cases[20].valid
+            False
+            >>> S.setValue(20, 1)
+            >>> S.cases[20].valid
+            True
+        """
+               
+        c = [el.value for el in self.cases if el.region == self.cases[position].region and el.position != position]
+        
+        if self.cases[position].value in c:
+            self.cases[position].valid = False
+            return False
+        else:
+            self.cases[position].valid = True
+            return True
+                
+            
+    def verif(self, position):
+        """
+            Méthode qui permet de vérifier la ligne, la colonne et la région.
+        """
+        a=self.verifLine(position)
+        b=self.verifRow(position)
+        c=self.verifRegion(position)
+        return a and b and c
+    
+    def checkWin(self):
+        """
+            Vérifie si une grille est gagnante ou pas.
+            Une grille est gagnante si elle est remplie et que toutes les cases
+            sont valides
+        """
+        a = []
+        if '.' in self.puzzleNow == False:
+            for i in range(81):
+                if self.cases(i).position.valid == True:
+                    a.append('.')
+                else:
+                    a.append(';')
+            if ';' in a:
+                return False
+            else:
+                return True
+                
+                    
+    def __repr__(self):
+        """
+            Méthode de représentation d'un Sudoku
+        """
+        S = ''
+        for i in range(81):
+            if (i+1)%9==0:
+                S += f'|{self.puzzleNow[i]}|\n'
+            else:
+                S += f'|{self.puzzleNow[i]}'
+        return S
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+        
+S = Grid.loadFromFile(0)
+S.setValue(20, 3)
+S.cases[20].valid
